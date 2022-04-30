@@ -3,6 +3,9 @@
 #include <openGL/Shader_s.h>
 #include <iostream>
 #include "stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -35,15 +38,17 @@ int main()
         return -1;
     }
 
-    Shader simpleShader("simpleShader.vs", "simpleShader.fs");
+    glEnable(GL_DEPTH_TEST);
+
+    Shader simpleShader("simpleShader.vertex", "simpleShader.fragment");
 
     float vertices[] = {
         // positions         // colors         // texture coords
          0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // top right
          0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // bottom right
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // bottom left 
-        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f  // top left
-    };
+        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f
+    };// top left
     unsigned int indices[] = {
         0, 1, 3, //first triangle
         1, 2, 3  //second triangle
@@ -134,15 +139,15 @@ int main()
 
     glfwTerminate();
     return 0;
-}
+    }
 
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
+        void processInput(GLFWwindow* window)
+    {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+    }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-}
+    void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+    {
+        glViewport(0, 0, width, height);
+    }

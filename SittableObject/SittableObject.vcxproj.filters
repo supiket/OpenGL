@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="simpleShader.vs">
+    <None Include="simpleShader.vertex">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="simpleShader.fs">
+    <None Include="simpleShader.fragment">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
