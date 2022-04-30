@@ -87,11 +87,11 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
     glm::vec3 cubePositions[] = {
-    glm::vec3(0.0f,  0.0f,  0.0f),
-    glm::vec3(2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3(2.4f, -0.4f, -3.5f)
+    glm::vec3( 0.0f,  0.0f, 0.0f),
+    glm::vec3( 0.4f, -0.45f, 0.2f),
+    glm::vec3(-0.4f, -0.45f, 0.2f),
+    glm::vec3(-0.4f, -0.45f, -0.2f),
+    glm::vec3(0.4f, -0.45f, -0.2f)
     };
 
     unsigned int VBO, VAO;
@@ -170,32 +170,31 @@ int main()
         glActiveTexture(GL_TEXTURE0);
 
         simpleShader.use();
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        unsigned int modelLoc = glGetUniformLocation(simpleShader.ID, "model");
-        unsigned int viewLoc = glGetUniformLocation(simpleShader.ID, "view");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-        simpleShader.setMat4("projection", projection);
 
         glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 5; i++)
         {
-            if (i == 0) {
-                glBindTexture(GL_TEXTURE_2D, seatTexture);
+            glm::mat4 model = glm::mat4(1.0f);
+            glm::mat4 view = glm::mat4(1.0f);
+            glm::mat4 projection = glm::mat4(1.0f);
+            view = glm::translate(view, glm::vec3(0.0f, 0.3f, -2.0f));
+            view = glm::rotate(view, (float)glfwGetTime() * glm::radians(20.0f), glm::vec3(1.0f, 1.0f, 0.1f));
+            projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+            model = glm::translate(model, cubePositions[i]);
+
+            if (i > 0) {
+                glBindTexture(GL_TEXTURE_2D, footTexture);
+                model = glm::scale(model, glm::vec3(0.08f, 0.8f, 0.08f));
             }
             else {
-                glBindTexture(GL_TEXTURE_2D, footTexture);
+                glBindTexture(GL_TEXTURE_2D, seatTexture);
+                model = glm::scale(model, glm::vec3(1.0f, 0.1f, 0.5f));
+
             }
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
             simpleShader.setMat4("model", model);
+            simpleShader.setMat4("view", view);
+            simpleShader.setMat4("projection", projection);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
