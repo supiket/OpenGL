@@ -183,7 +183,6 @@ int main()
         simpleShader.setMat4("projection", projection);
 
         glBindVertexArray(VAO);
-        glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 5; i++)
         {
             if (i == 0) {
