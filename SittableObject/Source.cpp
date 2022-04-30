@@ -110,10 +110,10 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    unsigned int texture;
+    unsigned int seatTexture, footTexture;
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(1, &seatTexture);
+    glBindTexture(GL_TEXTURE_2D, seatTexture);
     // texture wrapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -133,8 +133,31 @@ int main()
         cout << "Failed to load texture" << endl;
     }
     stbi_image_free(data);
+
+    glGenTextures(1, &footTexture);
+    glBindTexture(GL_TEXTURE_2D, footTexture);
+    // texture wrapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the texture
+    data = stbi_load("C:\\Users\\b-oza\\source\\repos\\OpenGL\\x64\\Debug\\wood_baseColor.jpg", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        cout << "Failed to load texture" << endl;
+    }
+    stbi_image_free(data);
+
     simpleShader.use();
-    simpleShader.setInt("texture", 0);
+    simpleShader.setInt("seatTexture", 0);
+    simpleShader.setInt("footTexture", 0);
 
 
     while (!glfwWindowShouldClose(window))
@@ -145,7 +168,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
 
         simpleShader.use();
         glm::mat4 model = glm::mat4(1.0f);
@@ -164,6 +186,12 @@ int main()
         glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 5; i++)
         {
+            if (i == 0) {
+                glBindTexture(GL_TEXTURE_2D, seatTexture);
+            }
+            else {
+                glBindTexture(GL_TEXTURE_2D, footTexture);
+            }
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
