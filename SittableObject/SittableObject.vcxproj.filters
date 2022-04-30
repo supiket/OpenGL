@@ -23,8 +23,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader_s.h">
+    <None Include="simpleShader.vs">
       <Filter>Source Files</Filter>
-    </ClInclude>
+    </None>
+    <None Include="simpleShader.fs">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
